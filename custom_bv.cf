@@ -1,0 +1,83 @@
+# Lonely-Hearts/Dating/MeetMe Spam
+header          __BV_SESFROM1   From =~ /^.*?((girl|lover|beautie)(z|s|)|date).*?\@(outlook|hotmail|yahoo|gmail|live|qq|windowslive)\.[.a-z0-9_]*$/i
+header          __BV_SESFROM2   EnvelopeFrom =~ /^.*?((girl|lover|beautie)(z|s|)|date).*?\@(outlook|hotmail|yahoo|gmail|live|qq|windowslive)\.[.a-z0-9_]*$/i
+header          __BV_SEOFROM3   From =~ /\@.*?date.*?$/i
+header          __BV_SEOFROM4   EnvelopeFrom =~ /\@.*?date.*?$/i
+
+header          __BV_SESSUB1    Subject =~ /((lonely|single|attractive|beautiful|beauty|young|sexy|(good|nice|loving)(.|_|-|)heart(ed|)|english(.|_|-|)speaking|pretty)( |_|-|\.|)(english speaking|of|)( |_|-|\.|)([a-zA-Z0-9]{0,6}(ish|ian|ese|ch)|german)(|'s|s)( |_|-|\.|)(singles|hottie(s|)|beautie(s|)|wom(a|e)n|girl('s|s|)|pussy|ass|arse))/
+header          __BV_SESSUB1    Subject =~ /(romantic companionship|seeking serious friendship|want to talk to you|waiting for you|meet with|want to date|start talking to|webcam action|chat with|looking for dates|chance to meet|serious dating|asiandate(ing|))/
+
+meta            BV_SESSPAM1 (( ( __BV_SESFROM1 + __BV_SESFROM2 ) + ( __BV_SESFROM3 + __BV_SESFROM4 ) + __BV_SESSUB1 + __BV_SESSUB2 ) >= 3)
+describe        BV_SESSPAM1 Lonely-Hearts Spam 1
+score           BV_SESSPAM1 5
+
+# Some domains/addresses that are unlikely to be used for legitimate email
+header          __BV_UNLIKELYDOMAIN1 From =~ /.*\@.*\.(pro|stream|lu|online|vip|xxx|top|site|aw|website|date|bid|today)$/
+header          __BV_UNLIKELYDOMAIN2 EnvelopeFrom =~ /.*\@.*\.(pro|stream|lu|online|vip|xxx|top|site|aw|website|date|bid|today)$/
+
+meta            BV_UNLIKELYDOMAIN2 (( __BV_UNLIKELYDOMAIN1 + __BV_UNLIKELYDOMAIN3 ) >= 1)
+describe        BV_UNLIKELYDOMAIN2 Emails from unlikely used legitimate domains
+score           BV_UNLIKELYDOMAIN2 2.5
+
+# Bounce spam where the email addess is bounce@*. Professional bounce services use more complicated addresses
+header          __BV_BOUNCESPAM1 From =~ /^bounce@.*\.(com|net|info|eu|biz|org|co.uk)$/
+header          __BV_BOUNCESPAM2 EnvelopeFrom =~ /^bounce@.*\.(com|net|info|eu|biz|org|co.uk)$/
+
+meta            BV_BOUNCESPAM1 (( __BV_BOUNCESPAM1 + __BV_BOUNCESPAM2 ) >= 1)
+describe        BV_BOUNCESPAM1 Email addresses begining with bounce@
+score           BV_BOUNCESPAM1 1.8
+
+# Obvious spammer is spammer
+body            __BV_OBVSPAM1 /(we are not spammers and are against spamming of any kind)/i
+body            __BV_OBVSPAM2 /((in( |-|)case|if) (you are not|you(\'| |)re not|you aren(\'| |)t|your not) interested( than you can| then|\,| ) reply with (a|) (simple|no))/i
+body            __BV_OBVSPAM3 /(we will never contact you again|have you removed from our database|no emails will be sent to you in (the |)future.)/i
+
+meta            BV_OBVSPAM1 (( __BV_OBVSPAM1 + __BV_OBVSPAM2 + __BV_OBVSPAM3) >= 2)
+score           BV_OBVSPAM1 1
+describe        BV_OBVSPAM1 We are not spammers
+
+# SEO Spam
+header          __BV_SEOFROM1   From =~ /^.*?(seo|website).*?\@(outlook|hotmail|yahoo|gmail|live|qq|windowslive)\.[.a-z0-9_]*$/i
+header          __BV_SEOFROM2   EnvelopeFrom =~ /^.*?(seo|website).*?\@(outlook|hotmail|yahoo|gmail|live|qq|windowslive)\.[.a-z0-9_]*$/i
+header          __BV_SEOFROM3   From =~ /\@.*?seo.*?$/i
+header          __BV_SEOFROM4   EnvelopeFrom =~ /\@.*?seo.*?$/i
+header          __BV_SEOSUB1    Subject =~ /(SEO|Web Designing|(upgrade|re(-|)design) your website|((first|top|1st) page|page 1|(web( |-|)site|page|(local( |)|)business) lands on) on (google|yahoo|bing)|website audit|web(( |-|)site|) (\&|and) mobile|mobile app|top rank(ing|)|rank your (keywords|website|local business)|web( |)site lands on)/i
+header          __BV_SEOSUB2    Subject =~ /(web(-| |)site|joomla|e(-|)commerce|word(-| |)press|mobile(-| |)app(|lication))( |)(design(ing|ed|s|'s|))( |)(or|and|\/|\\|)(develop(ed|ment|s|'s|)|)/i
+header          __BV_SEOSUB3    Subject =~ /increase (visitor(s|)|guest(s|)|user(s|)) (on|to)( |)(your|)web(-| |)(site|)/i
+body            __BV_SEOBODY1   /(web( |-|)site|SEO|SMO|graphic|search engine optimi(z|s)ation) (proposal|services|(re|-|)development|(re|-|)design(ing|)|package|(immediate |)improvement|(audit|)( |)(report|))/i
+body            __BV_SEOBODY2   /(mobile|i(-| |)(phone|pad|touch)|android) (app(lication(s|)|s|))/i
+body            __BV_SEOBODY3   /((browsed|surfed|viewed) (through |)your ((fb|face( |-|)book|web)( |-|)(page|site))|higher (visitor (traffic|count(s|))|ranking(s|))|gain fans on your social( |-)media|(enhance|boost) your (fb|face( |-|)book) (site|page))/i
+body            __BV_SEOBODY4   /(major issues|develop|(complete |)(re|)( |-|)design(ing|ed|)|studied|re( |-|)development) (new |of your |with your |with |your |your new |your existing )(website|webpage|web page|web site|site|page)/i
+body            __BV_SEOBODY5   /(word( |-|)press|joomla|e( |-|)commerce|magento|opencart|drupal)/i
+body            __BV_SEOBODY6   /(web( |-|)(page|site) hosting|graphic( |-|)design|e( |-|)commerce solution(s|)|cms web( |-|)(page|site)|mobile site)/i
+body            __BV_SEOBODY7   /((first|1st) page|amoung top|top( result| page|)|page 1) (in |on |of |)(search (engine(s|)|result(s|))|(google|yahoo|bing)( search|))/i
+body            __BV_SEOBODY8   /(users never scroll past the first page of search results|i would like to discuss a business with you|looking for any of these mentioned services|business development executive|prominent presence on (google|yahoo|bing))/i
+body            __BV_SEOBODY9   /(e(-| |)commerce|professional|mobile|php|java|\.net|windows|mac(-| |)(os|osx|))( |)(web(-| |)(site|)|app(lication|)|)( |)(development|design(ing|))/i
+
+meta            BV_SEOSPAM1 (( ( __BV_SEOFROM1 + __BV_SEOFROM2 ) + ( _BV_SEOFROM3 + __BV_SEOFROM4 ) + __BV_SEOSUB1 + __BV_SEOSUB2 + __BV_SEOSUB3 + __BV_SEOBODY1 + __BV_SEOBODY2 + __BV_SEOBODY3 + __BV_SEOBODY4 + __BV_SEOBODY5 + __BV_SEOBODY6 + __BV_SEOBODY7 + __BV_SEOBODY8 + __BV_SEOBODY9 + __BV_FREEMAIL1) >= 6)
+describe        BV_SEOSPAM1 Very Highly Likely SEO Spam
+score           BV_SEOSPAM1 4
+
+meta            BV_SEOSPAM2 (( ( __BV_SEOFROM1 + __BV_SEOFROM2 ) + ( _BV_SEOFROM3 + __BV_SEOFROM4 ) + __BV_SEOSUB1 + __BV_SEOSUB2 + __BV_SEOSUB3 + __BV_SEOBODY1 + __BV_SEOBODY2 + __BV_SEOBODY3 + __BV_SEOBODY4 + __BV_SEOBODY5 + __BV_SEOBODY6 + __BV_SEOBODY7 + __BV_SEOBODY8 + __BV_SEOBODY9 + __BV_FREEMAIL1) >= 5)
+describe        BV_SEOSPAM2 Highly Likely SEO Spam
+score           BV_SEOSPAM2 3
+
+meta            BV_SEOSPAM3 (( ( __BV_SEOFROM1 + __BV_SEOFROM2 ) + ( _BV_SEOFROM3 + __BV_SEOFROM4 ) + __BV_SEOSUB1 + __BV_SEOSUB2 + __BV_SEOSUB3 + __BV_SEOBODY1 + __BV_SEOBODY2 + __BV_SEOBODY3 + __BV_SEOBODY4 + __BV_SEOBODY5 + __BV_SEOBODY6 + __BV_SEOBODY7 + __BV_SEOBODY8 + __BV_SEOBODY9 + __BV_FREEMAIL1) >= 4)
+describe        BV_SEOSPAM3 Likely SEO Spam
+score           BV_SEOSPAM3 2
+
+meta            BV_SEOSPAM4 (( ( __BV_SEOFROM1 + __BV_SEOFROM2 ) + ( _BV_SEOFROM3 + __BV_SEOFROM4 ) + __BV_SEOSUB1 + __BV_SEOSUB2 + __BV_SEOSUB3 + __BV_SEOBODY1 + __BV_SEOBODY2 + __BV_SEOBODY3 + __BV_SEOBODY4 + __BV_SEOBODY5 + __BV_SEOBODY6 + __BV_SEOBODY7 + __BV_SEOBODY8 + __BV_SEOBODY9 + __BV_FREEMAIL1) >= 3)
+describe        BV_SEOSPAM4 Possible SEO Spam
+score           BV_SEOSPAM4 1
+
+# Mailman/package delivery spam
+body            __BV_MAILREDEEM1        /(the|a|an|our|your) (mailman|agent|courier|delivery man) (hasn\'t|could not|couldn\'t|did not|have not|was unable to|has not) (redeem|deliver|bring) (the|your|\ ) (parcel|item|package) to (the|your)( specified |\ )(home|place|address)( address |\ )(for the reason:|because|for the reason|thus) (recipient wasn\'t at home|recipient was away|you were away|nobody was at home|receiver was absent|no one was at home)/i
+header          __BV_MAILREDEEM2        Subject =~ /(the|a|an|our|your) (courier|mailman|agent|delivery man) (couldn't|didn't|was unable to|hasn\'t|have not|haven't|did not|wasn\'t able) (bring|redeem|deliver) (your|the|\ ) (parcel|item|package)/i
+
+meta            BV_MAILREDEEM1  ((__BV_MAILREDEEM1 + __BV_MAILREDEEM2) >= 1)
+describe        BV_MAILREDEEM1  Mailman spams 1
+score           BV_MAILREDEEM1  2
+
+meta            BV_MAILREDEEM2  ((__BV_MAILREDEEM1 + __BV_MAILREDEEM2) >= 2)
+describe        BV_MAILREDEEM2  Mailman spams 2
+score           BV_MAILREDEEM2  3.5
